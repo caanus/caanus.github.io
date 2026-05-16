@@ -26,4 +26,495 @@
     --font-display: 'Playfair Display', serif;
     --font-body: 'DM Sans', sans-serif;
   }
-  body { background: var(--bg); color: var(--text); font-family: var(--font-body); height: 100vh; overflow: hidden
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+  .progress-bar { height: 4px; background: var(--border); width: 100%; flex-shrink: 0; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.4s ease; }
+
+  .slide-wrapper { position: relative; flex: 1; overflow: hidden; display: flex; align-items: stretch; }
+
+  .slide { display: none; flex-direction: column; justify-content: center; align-items: center; flex: 1; padding: 1.5rem 5rem; text-align: center; animation: fadeIn 0.35s ease; position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; }
+  .slide.active { display: flex; position: relative; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  .side-btn {
+    position: fixed; top: 50%; transform: translateY(-50%); z-index: 100;
+    background: var(--surface); border: 2px solid var(--border); color: var(--text);
+    width: 52px; height: 52px; border-radius: 50%; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12); transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .side-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 6px 20px rgba(181,114,30,0.2); transform: translateY(-50%) scale(1.07); }
+  .side-btn:active { transform: translateY(-50%) scale(0.96); }
+  .side-btn:disabled { opacity: 0.2; cursor: default; pointer-events: none; }
+  .side-btn.left { left: 10px; }
+  .side-btn.right { right: 10px; background: var(--accent); border-color: var(--accent); color: #fff; }
+  .side-btn.right:hover { background: var(--accent-dark); border-color: var(--accent-dark); color: #fff; }
+
+  .slide-counter { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); font-size: 13px; color: var(--muted); font-weight: 600; background: var(--surface); border: 1.5px solid var(--border); border-radius: 40px; padding: 5px 16px; z-index: 100; }
+
+  h1.display { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5rem); line-height: 1.1; color: var(--text); margin-bottom: 1.5rem; }
+  h2.section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); line-height: 1.2; color: var(--text); margin-bottom: 0.75rem; }
+
+  .def-hl { background: #ffd090; border-bottom: 3px solid var(--accent); color: var(--accent-dark); padding: 1px 5px; border-radius: 3px; font-weight: 700; }
+  .non-hl  { background: #c8c4ff; border-bottom: 3px solid var(--accent2); color: var(--accent2-dark); padding: 1px 5px; border-radius: 3px; font-weight: 700; }
+
+  /* SLIDE 1 */
+  .pronoun-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 1.5rem; }
+  .pronoun-pill { background: var(--surface); border: 2px solid var(--border); border-radius: 14px; padding: 1rem 1.5rem; text-align: center; min-width: 110px; box-shadow: 0 2px 6px rgba(0,0,0,0.07); }
+  .pronoun-word { font-family: var(--font-display); font-size: 1.6rem; color: var(--accent); font-weight: 700; }
+  .pronoun-use { font-size: 12px; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; }
+
+  /* SLIDE 2 – improved dialog */
+  .dialog-outer { max-width: 680px; width: 100%; margin-top: 0.75rem; }
+  .dialog-box {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+  }
+  .dialog-header {
+    background: #f0ede6;
+    border-bottom: 1.5px solid var(--border);
+    padding: 0.65rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .dialog-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dialog-header .dot-tom { background: var(--accent); }
+  .dialog-header .dot-sara { background: var(--accent2); }
+  .dialog-body { padding: 1.2rem 1.4rem; display: flex; flex-direction: column; gap: 6px; }
+
+  .dialog-row { display: flex; align-items: flex-end; gap: 10px; }
+  .dialog-row.sara { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+    letter-spacing: 0;
+  }
+  .avatar.tom-av { background: var(--accent); }
+  .avatar.sara-av { background: var(--accent2); }
+
+  .bubble-wrap { display: flex; flex-direction: column; max-width: 82%; }
+  .dialog-row.sara .bubble-wrap { align-items: flex-end; }
+  .dialog-row.tom .bubble-wrap { align-items: flex-start; }
+
+  .spk2 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 3px; }
+
+  .bubble2 {
+    padding: 9px 13px; border-radius: 14px;
+    font-size: 16px; line-height: 1.6; color: var(--text);
+    display: inline-block;
+  }
+  .bubble2.tom-bubble { background: #ede9e1; border-bottom-left-radius: 4px; }
+  .bubble2.sara-bubble { background: #e3e1f5; border-bottom-right-radius: 4px; }
+
+  /* SLIDES 3-5 */
+  .elic-outer { max-width: 720px; width: 100%; }
+  .focus-sentence { background: var(--surface); border: 2px solid var(--border); border-radius: 14px; padding: 1.2rem 1.8rem; font-size: 1.3rem; line-height: 1.7; color: var(--text); margin-bottom: 1.25rem; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .q-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 1rem 1.3rem; margin-bottom: 0.7rem; text-align: left; }
+  .q-text { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 0.6rem; }
+  .reveal-btn { background: var(--accent-light); border: 1.5px solid #e0b87a; color: var(--accent-dark); padding: 7px 20px; border-radius: 40px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+  .reveal-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .reveal-answer { font-size: 16px; font-weight: 500; margin-top: 9px; display: none; background: var(--green-light); border-radius: 9px; padding: 8px 13px; color: var(--green); border: 1px solid #a8dcc5; text-align: left; }
+
+  /* SLIDE 4 */
+  .sentence-type-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 6px 20px; border-radius: 40px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: var(--font-body); border: 2px solid var(--border);
+    background: var(--bg); color: var(--muted); transition: all 0.2s;
+  }
+  .tab-btn.active-tab { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tab-btn.pos-tab.active-tab { background: var(--green); border-color: var(--green); color: #fff; }
+  .tab-btn.neg-tab.active-tab { background: #8b1a1a; border-color: #8b1a1a; color: #fff; }
+
+  .sentence-panel { display: none; }
+  .sentence-panel.active-panel { display: block; }
+
+  .type-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.09em; padding: 4px 12px; border-radius: 40px;
+    margin-bottom: 10px;
+  }
+  .badge-interrog { background: var(--accent-light); color: var(--accent-dark); border: 1.5px solid #e0b87a; }
+  .badge-affirm   { background: var(--green-light); color: var(--green); border: 1.5px solid #a8dcc5; }
+  .badge-neg      { background: #fde8e8; color: #8b1a1a; border: 1.5px solid #f0a0a0; }
+
+  .chips-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.9rem; }
+  .word-chip { display: inline-flex; flex-direction: column; align-items: center; padding: 7px 13px; border-radius: 9px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; font-size: 17px; font-weight: 500; color: var(--text); transition: all 0.2s; }
+  .word-chip:hover { border-color: var(--accent); background: var(--accent-light); }
+  .word-chip.revealed { border-color: var(--accent); background: var(--accent-light); }
+  .chip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-dark); margin-top: 3px; display: none; }
+  .word-chip.revealed .chip-label { display: block; }
+  .translate-btn { background: var(--blue-light); border: 2px solid #6ea8e0; color: var(--blue); padding: 8px 20px; border-radius: 40px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+  .translate-btn:hover { background: var(--blue); color: #fff; }
+  .translation { font-size: 1rem; color: var(--blue); background: var(--blue-light); border-radius: 9px; padding: 10px 16px; margin-top: 10px; display: none; font-style: italic; border: 2px solid #6ea8e0; font-weight: 600; }
+
+  /* SLIDE 5 (was 6) */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 760px; width: 100%; margin: 0.75rem auto; }
+  .compare-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 1.4rem; text-align: left; }
+  .compare-card.gold { border-top: 4px solid var(--accent); }
+  .compare-card.violet { border-top: 4px solid var(--accent2); }
+  .compare-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .compare-card.gold h3 { color: var(--accent-dark); }
+  .compare-card.violet h3 { color: var(--accent2-dark); }
+  .compare-card ul { list-style: none; }
+  .compare-card ul li { font-size: 16px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+  .compare-card ul li:last-child { border-bottom: none; color: var(--text); font-style: italic; }
+  .compare-card ul li strong { color: var(--text); font-weight: 700; }
+  .test-box { background: var(--green-light); border: 1.5px solid #a8dcc5; border-radius: 12px; padding: 1rem 1.5rem; max-width: 760px; width: 100%; font-size: 17px; color: var(--green); font-weight: 600; margin-top: 0.75rem; }
+
+  /* SLIDE 6 (was 5) */
+  .buildup-area { max-width: 680px; width: 100%; }
+  .sentence-display { background: var(--surface); border: 2px solid var(--border); border-radius: 18px; padding: 2rem 2.5rem; font-family: var(--font-display); font-size: clamp(1.3rem, 2.5vw, 1.9rem); color: var(--text); min-height: 90px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.5rem; line-height: 1.5; box-shadow: 0 3px 12px rgba(0,0,0,0.07); }
+  .word-appearing { animation: wordPop 0.35s ease; }
+  @keyframes wordPop { from { opacity:0; transform:scale(0.7) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .new-word { color: var(--accent); font-weight: 700; }
+  .rc-word { color: var(--accent2-dark); font-weight: 700; }
+  .buildup-btn { background: var(--accent); color: #fff; border: none; padding: 12px 32px; border-radius: 40px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; box-shadow: 0 2px 8px rgba(181,114,30,0.3); }
+  .buildup-btn:hover { background: var(--accent-dark); }
+  .buildup-btn:disabled { opacity: 0.35; cursor: default; }
+  .step-indicator { font-size: 13px; color: var(--muted); margin-top: 10px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:14.28%"></div></div>
+
+<div class="slide-wrapper">
+
+<!-- SLIDE 1 -->
+<div class="slide active" id="slide-1">
+  <h1 class="display">Relative Clauses</h1>
+  <div class="pronoun-row">
+    <div class="pronoun-pill"><div class="pronoun-word">who</div><div class="pronoun-use">people</div></div>
+    <div class="pronoun-pill"><div class="pronoun-word">which</div><div class="pronoun-use">things</div></div>
+    <div class="pronoun-pill"><div class="pronoun-word">that</div><div class="pronoun-use">people / things</div></div>
+    <div class="pronoun-pill"><div class="pronoun-word">whose</div><div class="pronoun-use">possession</div></div>
+    <div class="pronoun-pill"><div class="pronoun-word">where</div><div class="pronoun-use">places</div></div>
+  </div>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide" id="slide-2">
+  <div class="dialog-outer">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <span class="dot dot-tom"></span> Tom &nbsp;·&nbsp;
+        <span class="dot dot-sara"></span> Sara &nbsp;·&nbsp;
+        🎬 Two friends talking about a film festival
+      </div>
+      <div class="dialog-body">
+
+        <div class="dialog-row tom">
+          <div class="avatar tom-av">T</div>
+          <div class="bubble-wrap">
+            <div class="spk2">Tom</div>
+            <div class="bubble2 tom-bubble">Did you see the film <span class="def-hl">that won the festival prize?</span></div>
+          </div>
+        </div>
+
+        <div class="dialog-row sara">
+          <div class="avatar sara-av">S</div>
+          <div class="bubble-wrap">
+            <div class="spk2">Sara</div>
+            <div class="bubble2 sara-bubble">Yes! The director, <span class="non-hl">who studied in New York,</span> was amazing.</div>
+          </div>
+        </div>
+
+        <div class="dialog-row tom">
+          <div class="avatar tom-av">T</div>
+          <div class="bubble-wrap">
+            <div class="spk2">Tom</div>
+            <div class="bubble2 tom-bubble">I loved the café scene. That's the café <span class="def-hl">where they first met.</span></div>
+          </div>
+        </div>
+
+        <div class="dialog-row sara">
+          <div class="avatar sara-av">S</div>
+          <div class="bubble-wrap">
+            <div class="spk2">Sara</div>
+            <div class="bubble2 sara-bubble">The actress <span class="def-hl">whose voice I really love</span> was in it too.</div>
+          </div>
+        </div>
+
+        <div class="dialog-row tom">
+          <div class="avatar tom-av">T</div>
+          <div class="bubble-wrap">
+            <div class="spk2">Tom</div>
+            <div class="bubble2 tom-bubble">The soundtrack, <span class="non-hl">which was composed in just two weeks,</span> was beautiful.</div>
+          </div>
+        </div>
+
+        <div class="dialog-row sara">
+          <div class="avatar sara-av">S</div>
+          <div class="bubble-wrap">
+            <div class="spk2">Sara</div>
+            <div class="bubble2 sara-bubble">I know! It's a film <span class="def-hl">that I'll never forget.</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide" id="slide-3">
+  <h2 class="section-title">What does it mean?</h2>
+  <div class="elic-outer">
+    <div class="focus-sentence">Tom and Sara use relative clauses throughout the conversation. Look at the highlighted parts.</div>
+    <div class="q-card">
+      <div class="q-text">Tom says "the film <span class="def-hl">that won the festival prize</span>." Which film does he mean? Is it just an ordinary film?</div>
+      <button class="reveal-btn" onclick="tog('m1')">Show answer</button>
+      <div class="reveal-answer" id="m1">No. It is the film that won the prize.</div>
+    </div>
+    <div class="q-card">
+      <div class="q-text">Sara says "the director, <span class="non-hl">who studied in New York</span>." Did we learn extra information about the director?</div>
+      <button class="reveal-btn" onclick="tog('m2')">Show answer</button>
+      <div class="reveal-answer" id="m2">Yes. We learned that the director studied in New York.</div>
+    </div>
+    <div class="q-card">
+      <div class="q-text">Tom says "the café <span class="def-hl">where they first met</span>." Can you remove those words and still understand which café?</div>
+      <button class="reveal-btn" onclick="tog('m3')">Show answer</button>
+      <div class="reveal-answer" id="m3">No. Without it, we cannot know which café he means.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4 -->
+<div class="slide" id="slide-4">
+  <h2 class="section-title">How is it built?</h2>
+  <div class="elic-outer">
+    <div class="sentence-type-tabs">
+      <button class="tab-btn active-tab" onclick="showPanel('interrog')">? Interrogative</button>
+      <button class="tab-btn pos-tab" onclick="showPanel('affirm')">+ Affirmative</button>
+      <button class="tab-btn neg-tab" onclick="showPanel('neg')">− Negative</button>
+    </div>
+
+    <!-- Interrogative -->
+    <div class="sentence-panel active-panel" id="panel-interrog">
+      <div class="q-card">
+        <div class="type-badge badge-interrog">? Interrogative</div>
+        <div class="q-text">Click each word to identify its role:</div>
+        <div class="chips-row" id="chips-interrog">
+          <span class="word-chip" onclick="revealChip(this)">Is<div class="chip-label">Auxiliary Verb</div></span>
+          <span class="word-chip" onclick="revealChip(this)">he<div class="chip-label">Subject</div></span>
+          <span class="word-chip" onclick="revealChip(this)">the<div class="chip-label">Article</div></span>
+          <span class="word-chip" onclick="revealChip(this)">scientist<div class="chip-label">Noun</div></span>
+          <span class="word-chip" onclick="revealChip(this)">whose<div class="chip-label">Relative Pronoun</div></span>
+          <span class="word-chip" onclick="revealChip(this)">research<div class="chip-label">Noun (possession)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">changed<div class="chip-label">Verb</div></span>
+          <span class="word-chip" onclick="revealChip(this)">medicine<div class="chip-label">Noun (object)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">?<div class="chip-label">End punctuation</div></span>
+        </div>
+        <button class="translate-btn" onclick="tog('tr-interrog')">🇹🇷 Çevir</button>
+        <div class="translation" id="tr-interrog">Araştırması tıbbı değiştiren bilim insanı o mu?</div>
+      </div>
+    </div>
+
+    <!-- Affirmative -->
+    <div class="sentence-panel" id="panel-affirm">
+      <div class="q-card">
+        <div class="type-badge badge-affirm">+ Affirmative</div>
+        <div class="q-text">Click each word to identify its role:</div>
+        <div class="chips-row" id="chips-affirm">
+          <span class="word-chip" onclick="revealChip(this)">He<div class="chip-label">Subject</div></span>
+          <span class="word-chip" onclick="revealChip(this)">is<div class="chip-label">Verb (to be)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">the<div class="chip-label">Article</div></span>
+          <span class="word-chip" onclick="revealChip(this)">scientist<div class="chip-label">Noun</div></span>
+          <span class="word-chip" onclick="revealChip(this)">whose<div class="chip-label">Relative Pronoun</div></span>
+          <span class="word-chip" onclick="revealChip(this)">research<div class="chip-label">Noun (possession)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">changed<div class="chip-label">Verb</div></span>
+          <span class="word-chip" onclick="revealChip(this)">medicine<div class="chip-label">Noun (object)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">.<div class="chip-label">End punctuation</div></span>
+        </div>
+        <button class="translate-btn" onclick="tog('tr-affirm')">🇹🇷 Çevir</button>
+        <div class="translation" id="tr-affirm">O, araştırması tıbbı değiştiren bilim insanıdır.</div>
+      </div>
+    </div>
+
+    <!-- Negative -->
+    <div class="sentence-panel" id="panel-neg">
+      <div class="q-card">
+        <div class="type-badge badge-neg">− Negative</div>
+        <div class="q-text">Click each word to identify its role:</div>
+        <div class="chips-row" id="chips-neg">
+          <span class="word-chip" onclick="revealChip(this)">He<div class="chip-label">Subject</div></span>
+          <span class="word-chip" onclick="revealChip(this)">isn't<div class="chip-label">Negative Verb (to be)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">the<div class="chip-label">Article</div></span>
+          <span class="word-chip" onclick="revealChip(this)">scientist<div class="chip-label">Noun</div></span>
+          <span class="word-chip" onclick="revealChip(this)">whose<div class="chip-label">Relative Pronoun</div></span>
+          <span class="word-chip" onclick="revealChip(this)">research<div class="chip-label">Noun (possession)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">changed<div class="chip-label">Verb</div></span>
+          <span class="word-chip" onclick="revealChip(this)">medicine<div class="chip-label">Noun (object)</div></span>
+          <span class="word-chip" onclick="revealChip(this)">.<div class="chip-label">End punctuation</div></span>
+        </div>
+        <button class="translate-btn" onclick="tog('tr-neg')">🇹🇷 Çevir</button>
+        <div class="translation" id="tr-neg">O, araştırması tıbbı değiştiren bilim insanı değildir.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SLIDE 5 (was 6) – Two types -->
+<div class="slide" id="slide-5">
+  <h2 class="section-title">Two types</h2>
+  <div class="compare-grid">
+    <div class="compare-card gold">
+      <h3>Defining</h3>
+      <ul>
+        <li><strong>No commas</strong></li>
+        <li><strong>who / that / which / whose / where</strong></li>
+        <li><strong>Essential</strong> — meaning changes if removed</li>
+        <li>The film <span class="def-hl">that won the prize</span> was amazing.</li>
+      </ul>
+    </div>
+    <div class="compare-card violet">
+      <h3>Non-defining</h3>
+      <ul>
+        <li><strong>Commas required</strong></li>
+        <li><strong>who / which / whose</strong> (never "that")</li>
+        <li><strong>Extra info</strong> — sentence works without it</li>
+        <li>The director, <span class="non-hl">who studied in New York,</span> was great.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="test-box">🧪 Quick test: Can you remove the clause and still know which person or thing? &nbsp;<strong>Yes →</strong> use commas. &nbsp;<strong>No →</strong> no commas.</div>
+</div>
+
+<!-- SLIDE 6 (was 5) – Why do we use it -->
+<div class="slide" id="slide-6">
+  <h2 class="section-title">Why do we use it?</h2>
+  <div class="elic-outer">
+    <div class="focus-sentence">"The soundtrack, <span class="non-hl">which was composed in just two weeks,</span> was beautiful."</div>
+    <div class="q-card">
+      <div class="q-text">Why and where do we use relative clauses?</div>
+      <button class="reveal-btn" onclick="tog('fn1')">Show answer</button>
+      <div class="reveal-answer" id="fn1">To add information about a noun — right after it, in the same sentence.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7 – Repeat & Build -->
+<div class="slide" id="slide-7">
+  <h2 class="section-title" style="margin-bottom:0.4rem;">Repeat &amp; Build</h2>
+  <p style="font-size:14px;color:var(--muted);margin-bottom:1.25rem;font-weight:500;">Press the button to build the sentence step by step.</p>
+  <div class="buildup-area">
+    <div class="sentence-display" id="sentence-display">
+      <span id="sentence-text" style="color:var(--muted);font-style:italic;font-family:var(--font-body);font-size:1rem;">Press the button to start…</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="buildup-btn" id="build-btn" onclick="buildStep()">▶ Add next part</button>
+      <button class="reveal-btn" onclick="resetBuild()">↺ Reset</button>
+    </div>
+    <div class="step-indicator" id="step-ind"></div>
+  </div>
+</div>
+
+</div><!-- /slide-wrapper -->
+
+<button class="side-btn left" id="prev-btn" onclick="changeSlide(-1)" disabled>&#8592;</button>
+<button class="side-btn right" id="next-btn" onclick="changeSlide(1)">&#8594;</button>
+<div class="slide-counter" id="counter">1 / 7</div>
+
+<script>
+  let current = 1;
+  const total = 7;
+
+  function changeSlide(dir) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = Math.max(1, Math.min(total, current + dir));
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('counter').textContent = current + ' / ' + total;
+    document.getElementById('progress').style.width = (current / total * 100) + '%';
+    document.getElementById('prev-btn').disabled = current === 1;
+    const nb = document.getElementById('next-btn');
+    if (current === total) {
+      nb.innerHTML = '&#8635;';
+      nb.onclick = () => { current = total; changeSlide(-(total - 1)); nb.innerHTML = '&#8594;'; nb.onclick = () => changeSlide(1); };
+    } else {
+      nb.innerHTML = '&#8594;';
+      nb.onclick = () => changeSlide(1);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
+  });
+
+  function tog(id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function revealChip(el) {
+    el.classList.toggle('revealed');
+    const lbl = el.querySelector('.chip-label');
+    if (lbl) lbl.style.display = el.classList.contains('revealed') ? 'block' : 'none';
+  }
+
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  function showPanel(type) {
+    // hide all panels
+    document.querySelectorAll('.sentence-panel').forEach(p => p.classList.remove('active-panel'));
+    document.getElementById('panel-' + type).classList.add('active-panel');
+    // update tabs
+    tabBtns.forEach(b => b.classList.remove('active-tab'));
+    const clicked = [...tabBtns].find(b => b.getAttribute('onclick').includes(type));
+    if (clicked) clicked.classList.add('active-tab');
+  }
+
+  const steps = [
+    { text: 'She is',      cls: '' },
+    { text: 'the actress', cls: '' },
+    { text: 'who won',     cls: 'rc-word' },
+    { text: 'the award',   cls: 'rc-word' },
+    { text: 'last year.',  cls: 'rc-word' }
+  ];
+  let buildIdx = 0;
+  let builtWords = [];
+
+  function buildStep() {
+    if (buildIdx >= steps.length) return;
+    builtWords.push(steps[buildIdx]);
+    buildIdx++;
+    const disp = document.getElementById('sentence-text');
+    disp.innerHTML = builtWords.map((w, i) => {
+      const isNew = i === builtWords.length - 1;
+      return `<span class="${w.cls}${isNew ? ' word-appearing new-word' : ''}">${w.text}</span>`;
+    }).join(' ');
+    document.getElementById('step-ind').textContent = buildIdx + ' / ' + steps.length + ' parts added';
+    if (buildIdx >= steps.length) document.getElementById('build-btn').disabled = true;
+  }
+
+  function resetBuild() {
+    buildIdx = 0; builtWords = [];
+    document.getElementById('sentence-text').innerHTML = '<span style="color:var(--muted);font-style:italic;font-family:var(--font-body);font-size:1rem;">Press the button to start…</span>';
+    document.getElementById('step-ind').textContent = '';
+    document.getElementById('build-btn').disabled = false;
+  }
+</script>
+</body>
+</html>
